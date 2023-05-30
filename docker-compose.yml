@@ -1,0 +1,31 @@
+version: '3'
+services:
+  jenkins:
+    container_name: jenkins_managed_by_compose
+    image: jenkins/jenkins:alpine
+    ports:
+      - "8081:8080"
+      - "50001:50000"
+    volumes:
+      -jenkins_home:/var/jenkins_home
+    restart: always
+    networks:
+      - net_jenkins
+
+  node_server:
+    container_name: node_server
+    image: node:latest
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    command: npm start
+    restart: always
+    networks:
+      - net_jenkins
+      
+volumes:
+  jenkins_home:
+networks:
+  net_jenkins:
